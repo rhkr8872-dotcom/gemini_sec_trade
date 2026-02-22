@@ -4,8 +4,12 @@ from google import genai
 from serpapi.google_search import GoogleSearch
 
 # [1. 필수 설정]
-SERPAPI_KEY = "7eafa278ec0bf5cc0e99347c1497bfe57d1bae3df4ae519ba558a98b4f02a740"
-GEMINI_KEY = "AIzaSy..." # 담당자님의 키 입력
+import os
+
+# 직접 입력 대신 환경 변수에서 가져오도록 수정
+MY_SERPAPI_KEY = os.getenv("MY_SERPAPI_KEY")
+MY_GEMINI_KEY = os.getenv("MY_GEMINI_KEY")
+SENDER_PASSWORD = os.getenv("SENDER_PASSWORD")
 SENDER_EMAIL = "rhkr8872@gmail.com"
 RECEIVER_EMAIL = "lifepal.kwak@samsung.com"
 
@@ -51,5 +55,6 @@ def run_daily_monitoring():
             "api_key": SERPAPI_KEY
         })
         # 수집 및 분석 로직 수행...
+
 
 print("✅ 시스템이 준비되었습니다. 매일 오전 7시, 24시간 이내의 정제된 통상 리포트를 발송합니다.")
