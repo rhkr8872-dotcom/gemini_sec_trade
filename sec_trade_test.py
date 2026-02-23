@@ -3,13 +3,12 @@ from datetime import datetime, timedelta
 from google import genai
 from serpapi.google_search import GoogleSearch
 
-# [1. 필수 설정]
 import os
+SENDER_PASSWORD = os.getenv("SENDER_PASSWORD") # GitHub Secrets에서 가져옴
 
-# 직접 입력 대신 환경 변수에서 가져오도록 수정
-MY_SERPAPI_KEY = os.getenv("MY_SERPAPI_KEY")
-MY_GEMINI_KEY = os.getenv("MY_GEMINI_KEY")
-SENDER_PASSWORD = os.getenv("SENDER_PASSWORD")
+# [1. 필수 설정]
+SERPAPI_KEY = "7eafa278ec0bf5cc0e99347c1497bfe57d1bae3df4ae519ba558a98b4f02a740"
+GEMINI_KEY = "AIzaSyC1ztyTRflvtf3b72O_4oaFnwzIMZ-7Cgo" # 담당자님의 키 입력
 SENDER_EMAIL = "rhkr8872@gmail.com"
 RECEIVER_EMAIL = "lifepal.kwak@samsung.com"
 
@@ -56,5 +55,13 @@ def run_daily_monitoring():
         })
         # 수집 및 분석 로직 수행...
 
+# [Step 4] 메일 발송 부분 (기존 로직 보완)
+if final_df.empty:
+    print("⚠️ 수집된 새로운 뉴스가 없습니다. 테스트 메일을 발송합니다.")
+    content = "<h3>현재 24시간 이내에 수집된 새로운 통상 뉴스가 없습니다.</h3>"
+else:
+    content = f"<h3>🌍 금일 신규 수집 리포트</h3>{final_df.to_html(index=False, escape=False)}"
+
+msg.attach(MIMEText(f"<html><head>{style}</head><body>{content}</body></html>", 'html'))
 
 print("✅ 시스템이 준비되었습니다. 매일 오전 7시, 24시간 이내의 정제된 통상 리포트를 발송합니다.")
